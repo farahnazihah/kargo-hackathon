@@ -27,14 +27,81 @@ import DatePicker from "react-datepicker";
 import dateFormat from "dateformat";
 import "react-datepicker/dist/react-datepicker.css";
 
+// import AllocateShipment from './allocateShipment'
+
 export default function Truck() {
   const router = useRouter();
   const [dataShipment, setDataShipment] = useState(undefined);
+  const [dataTruck, setDataTruck] = useState(undefined);
+  const [dataDriver, setDataDriver] = useState(undefined);
+  
   const [openModalAddShipment, setOpenModalAddShipment] = useState(false);
+  const [openModalAllocateShipment, setOpenModalAllocateShipment] = useState(false);
+  const [openModalUpdateStatus, setOpenModalUpdateStatus] = useState(false);
+  const [shipmentChoosed, setShipmentChoosed] = useState({})
+
   const [loadingDate, setLoadingDate] = useState(new Date());
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState();
   
+  useEffect(() => {
+    const data = [
+      {
+        id: 1,
+        license: "ABC1234",
+        type: "tronton",
+        plate: "yellow",
+        production: "2002",
+      },
+      {
+        id: 2,
+        license: "ABC1235",
+        type: "tronton",
+        plate: "yellow",
+        production: "2002",
+      },
+      {
+        id: 3,
+        license: "ABC1236",
+        type: "container",
+        plate: "yellow",
+        production: "2002",
+      },
+    ]
+
+    setDataTruck(data);
+    console.log(dataTruck);
+  }, []);
+
+  useEffect(() => {
+    const data = [
+      {
+        id: 1,
+        driver_name : "Driver 1",
+        phone_number : "081234567890",
+        created_at : "2022-08-12",
+        status : true,
+      },
+      {
+        id: 2,
+        driver_name : "Driver 2",
+        phone_number : "081234567890",
+        created_at : "2022-08-12",
+        status : true,
+      },
+      {
+        id: 3,
+        driver_name : "Driver 3",
+        phone_number : "081234567890",
+        created_at : "2022-08-12",
+        status : true,
+      },
+    ]
+
+    setDataDriver(data);
+    console.log(dataDriver);
+  }, []);
+
   useEffect(() => {
     const data = [
       {
@@ -131,6 +198,17 @@ export default function Truck() {
     }
   }
 
+  const handleSelecOption = (e, s) => {
+    console.log(e.target.value)
+    console.log(s)
+    setShipmentChoosed(s)
+    if(e.target.value == 'allocateShipment'){
+      setOpenModalAllocateShipment(true)
+    } else if(e.target.value == 'updateStatus'){
+      setOpenModalUpdateStatus(true)
+    }
+  }
+
   return (
     <>
       <PageLayout>
@@ -165,6 +243,7 @@ export default function Truck() {
                 <Th>Destination</Th>
                 <Th>Loading Date</Th>
                 <Th>Status</Th>
+                <Th>Action</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -178,6 +257,20 @@ export default function Truck() {
                     <Td>{s.destination}</Td>
                     <Td>{s.loading_date}</Td>
                     <Td>{s.status}</Td>
+                    <Td>
+                      <Select
+                        placeholder="Select action"
+                        mb="1rem"
+                        onChange={(e) => handleSelecOption(e, s)}
+                      >
+                          <option value="allocateShipment">
+                            Allocate Shipment
+                          </option>
+                          <option value="updateStatus">
+                            Update Status
+                          </option>
+                      </Select>
+                    </Td>
                   </Tr>
                 );
               })}
@@ -220,6 +313,43 @@ export default function Truck() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      <Modal
+        isOpen={openModalAllocateShipment}
+        onClose={() => setOpenModalAllocateShipment(false)}
+        size='xl'
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Allocate Shipment {shipmentChoosed?.shipment_number}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>Truck</FormLabel>
+              <Input placeholder='Type Origin' />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Driver</FormLabel>
+              <Input placeholder='Type Destination' />
+            </FormControl>
+
+          </ModalBody>
+
+          <ModalFooter>
+            <Button onClick={() => setOpenModalAllocateShipment(false)}>Cancel</Button>
+            <Button colorScheme='blue' mr={3}>
+              Allocate
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* <AllocateShipment 
+        openModalAllocateShipment={openModalAllocateShipment}
+        setOpenModalAllocateShipment={setOpenModalAllocateShipment}
+        shipmentChoosed={shipmentChoosed}
+      /> */}
     </>
     
   );
