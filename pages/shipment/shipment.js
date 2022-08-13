@@ -32,6 +32,7 @@ import "react-datepicker/dist/react-datepicker.css";
 export default function Truck() {
   const router = useRouter();
   const [dataShipment, setDataShipment] = useState(undefined);
+  const [dataShipmentFiltered, setDataShipmentFiltered] = useState(undefined);
   const [dataTruck, setDataTruck] = useState(undefined);
   const [dataDriver, setDataDriver] = useState(undefined);
   
@@ -46,7 +47,8 @@ export default function Truck() {
   const [loadingDate, setLoadingDate] = useState(new Date());
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState();
-
+  const [search, setSearch] = useState();
+  
   const [listStatus, setListStatus] = useState([
     "Ongoing to Origin",
     "At Origin",
@@ -137,7 +139,7 @@ export default function Truck() {
       },
       {
         id: 1,
-        shipment_number: "ABC1234",
+        shipment_number: "ABC1235",
         truck: {
           id: 2,
           license: "ABC1234",
@@ -159,7 +161,7 @@ export default function Truck() {
       },
       {
         id: 1,
-        shipment_number: "ABC1234",
+        shipment_number: "ABC1236",
         truck: {
           id: 2,
           license: "ABC1234",
@@ -182,7 +184,17 @@ export default function Truck() {
     ];
 
     setDataShipment(data);
+    setDataShipmentFiltered(data);
   }, []);
+
+  const handleSearch = () => {
+    if(!search || search == ""){
+      setDataShipmentFiltered(dataShipment);
+    } else {
+      let searchValue = dataShipment.filter(d => d.shipment_number == search);
+      setDataShipmentFiltered(searchValue);
+    }
+  }
 
   const handleAddShipment = () => {
     if(!destination || destination == "" || !origin || origin == ""){
@@ -194,7 +206,6 @@ export default function Truck() {
         loading_date : dateFormat(loadingDate, "yyyy-mm-dd"),
         status : 'Created',
       }
-      console.log(item)
       
       // axios.post('url',item)
       // .then(response => {        
@@ -215,7 +226,6 @@ export default function Truck() {
         id_driver : driverIDChoosed,
         status : 'Allocated',
       }
-      console.log(item)
       
       // axios.put('url',item)
       // .then(response => {        
@@ -267,9 +277,10 @@ export default function Truck() {
                 pr='4.5rem'
                 type='text'
                 placeholder='type here'
+                onChange={(e) => setSearch(e.target.value)}
               />
               <InputRightElement width='4.5rem'>
-                <Button h='1.75rem' size='sm'>
+                <Button h='1.75rem' size='sm' onClick={() => handleSearch()}>
                   Search
                 </Button>
               </InputRightElement>
@@ -291,7 +302,7 @@ export default function Truck() {
               </Tr>
             </Thead>
             <Tbody>
-              {dataShipment?.map((s, index) => {
+              {dataShipmentFiltered?.map((s, index) => {
                 return (
                   <Tr key={s.id}>
                     <Td>{s.shipment_number}</Td>
