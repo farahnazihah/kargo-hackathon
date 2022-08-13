@@ -74,6 +74,11 @@ export default function Truck() {
     fetchTruckData();
   };
 
+  const handleShowUpdate = async (id) => {
+    setEditTruck(contentTruck.map((truck) => truck.id == id));
+    setShowModal(true);
+  };
+
   useEffect(() => {
     fetchTruckData();
   }, []);
@@ -176,7 +181,9 @@ export default function Truck() {
                     <Td>{truck.plate}</Td>
                     <Td>{truck.production}</Td>
                     <Td>
-                      <Button>Update</Button>
+                      <Button onClick={() => handleUpdateTruck(truck.id)}>
+                        Update
+                      </Button>
                       <Button onClick={() => handleDeactivate(truck.id)}>
                         Deactivate Unit
                       </Button>
@@ -196,21 +203,29 @@ export default function Truck() {
             <ModalBody pb={6}>
               <FormControl>
                 <FormLabel>License Number</FormLabel>
-                <Input onChange={(e) => setLicenseNumber(e.target.value)} />
+                <Input onChange={(e) => setLicenseNumber(e.target.value)}>
+                  {editTruck.license}
+                </Input>
               </FormControl>
 
               <FormControl mt={4}>
                 <FormLabel>License Type</FormLabel>
-                <Input onChange={(e) => setLicenseType(e.target.value)} />
+                <Input onChange={(e) => setLicenseType(e.target.value)}>
+                  {editTruck.license_type}
+                </Input>
               </FormControl>
 
               <FormControl mt={4}>
                 <FormLabel>Truck Type</FormLabel>
-                <Input onChange={(e) => setTruckType(e.target.value)} />
+                <Input onChange={(e) => setTruckType(e.target.value)}>
+                  {editTruck.type}
+                </Input>
               </FormControl>
               <FormControl mt={4}>
                 <FormLabel>Production Year</FormLabel>
-                <Input onChange={(e) => setProductionYear(e.target.value)} />
+                <Input onChange={(e) => setProductionYear(e.target.value)}>
+                  {editTruck.production}
+                </Input>
               </FormControl>
               <FormControl mt={4}>
                 <FormLabel>STNK</FormLabel>
