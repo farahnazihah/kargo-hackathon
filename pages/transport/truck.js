@@ -11,11 +11,14 @@ import {
   Td,
   TableCaption,
   TableContainer,
+  Select,
 } from "@chakra-ui/react";
 
 export default function Truck() {
-  const [dataTruck, setDataTruck] = useState(undefined);
   const router = useRouter();
+  const [dataTruck, setDataTruck] = useState(undefined);
+  const [truckType, setTruckType] = useState([]);
+  const [truckTypeInput, setTruckTypeInput] = useState("");
 
   useEffect(() => {
     const data = [
@@ -36,14 +39,14 @@ export default function Truck() {
       {
         id: "3",
         license: "ABC1234",
-        type: "tronton",
+        type: "container",
         plate: "yellow",
         production: "2002",
       },
       {
         id: "4",
         license: "ABC1234",
-        type: "tronton",
+        type: "CDE",
         plate: "yellow",
         production: "2002",
       },
@@ -58,14 +61,40 @@ export default function Truck() {
 
     setDataTruck(data);
     console.log(dataTruck);
-    router.push("/");
+
+    let dataTruckType = data.map(({ type }) => type);
+    dataTruckType = [...new Set(dataTruckType)];
+    setTruckType(dataTruckType);
+    console.log(truckType);
+    console.log("hah");
   }, []);
+
+  useEffect(() => {}, [truckTypeInput]);
+
+  const handleInput = (event) => {
+    setTruckTypeInput(event.target.value);
+    console.log(truckTypeInput);
+  };
 
   return (
     <>
       <PageLayout>
-        <TableContainer>
-          <Table variant="simple">
+        <TableContainer width={"100%"}>
+          <Select
+            placeholder="Select option"
+            w={["100%", "50%"]}
+            mb="1rem"
+            onChange={(value) => {
+              setTruckTypeInput(value);
+            }}
+          >
+            {truckType.map((type, idx) => (
+              <option key={idx} value={type}>
+                {type}
+              </option>
+            ))}
+          </Select>
+          <Table variant="simple" width={"100%"}>
             <Thead>
               <Tr>
                 <Th>License Number</Th>
@@ -75,13 +104,15 @@ export default function Truck() {
               </Tr>
             </Thead>
             <Tbody>
-              {dataTruck?.map((truck, idx) => {
-                <Tr>
-                  <Td key={truck.id}>{truck.license}</Td>
-                  <Td>{truck.type}</Td>
-                  <Td>{truck.plate}</Td>
-                  <Td>{truck.production}</Td>
-                </Tr>;
+              {dataTruck?.map((truck, index) => {
+                return (
+                  <Tr key={truck.id}>
+                    <Td>{truck.license}</Td>
+                    <Td>{truck.type}</Td>
+                    <Td>{truck.plate}</Td>
+                    <Td>{truck.production}</Td>
+                  </Tr>
+                );
               })}
             </Tbody>
           </Table>

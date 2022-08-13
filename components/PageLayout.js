@@ -10,11 +10,11 @@ import {
 
 const PageLayout = ({ children }) => {
   return (
-    <Flex direction="row">
+    <Center direction="row" width={"100%"}>
       <Box w={["100%", "90%", "80%"]} h="100vh" p={["1rem", "5rem", "5rem"]}>
-        {children}
+        <div>{children}</div>
       </Box>
-    </Flex>
+    </Center>
   );
 };
 
