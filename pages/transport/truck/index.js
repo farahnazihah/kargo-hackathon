@@ -12,12 +12,14 @@ import {
   TableCaption,
   TableContainer,
   Select,
+  Button,
 } from "@chakra-ui/react";
 
 export default function Truck() {
   const router = useRouter();
-  const [dataTruck, setDataTruck] = useState(undefined);
-  const [truckType, setTruckType] = useState([]);
+  const truckType = ["Tronton", "Container", "CDE"];
+  const [dataTruck, setDataTruck] = useState([]);
+  const [contentTruck, setContentTruck] = useState([]);
   const [truckTypeInput, setTruckTypeInput] = useState("");
 
   useEffect(() => {
@@ -60,25 +62,27 @@ export default function Truck() {
     ];
 
     setDataTruck(data);
-    console.log(dataTruck);
-
-    let dataTruckType = data.map(({ type }) => type);
-    dataTruckType = [...new Set(dataTruckType)];
-    setTruckType(dataTruckType);
-    console.log(truckType);
-    console.log("hah");
+    setContentTruck(data);
   }, []);
 
-  useEffect(() => {}, [truckTypeInput]);
+  useEffect(() => {
+    const filteredData = dataTruck.filter(
+      (data) => data.type === truckTypeInput
+    );
+    setContentTruck(filteredData);
+    console.log(contentTruck);
+  }, [truckTypeInput]);
 
   const handleInput = (event) => {
     setTruckTypeInput(event.target.value);
-    console.log(truckTypeInput);
   };
 
   return (
     <>
       <PageLayout>
+        <Button _hover={{ bgColor: "primary", color: "white" }} mb="3rem">
+          Add New Truck
+        </Button>
         <TableContainer width={"100%"}>
           <Select
             placeholder="Select option"
@@ -104,7 +108,7 @@ export default function Truck() {
               </Tr>
             </Thead>
             <Tbody>
-              {dataTruck?.map((truck, index) => {
+              {contentTruck?.map((truck, index) => {
                 return (
                   <Tr key={truck.id}>
                     <Td>{truck.license}</Td>
