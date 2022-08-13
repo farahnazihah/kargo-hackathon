@@ -18,7 +18,7 @@ export default function Home() {
     if(user == 'Transporter'){
       router.push("/transport/truck");
     } else if(user = 'Shipper'){
-      // router.push("/shipment");
+      router.push("/shipment/shipment");
     }
   }
 
