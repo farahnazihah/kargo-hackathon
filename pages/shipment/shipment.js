@@ -79,7 +79,17 @@ export default function Truck() {
         production: "2002",
       },
     ]
-
+    console.log(
+      axios.get("http://localhost:8080/api/trucks").then(function (response) {
+        // handle success
+        console.log("ini balikan");
+        console.log(response)
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      );
     setDataTruck(data);
   }, []);
 
