@@ -83,18 +83,6 @@ export default function Truck() {
     fetchTruckData();
   }, []);
 
-  // useEffect(() => {
-  //   const filteredData = dataTruck.filter(
-  //     (data) => data.type === truckTypeInput
-  //   );
-  //   setContentTruck(filteredData);
-  //   console.log(contentTruck);
-  // }, [truckTypeInput]);
-
-  const handleInput = (event) => {
-    setTruckTypeInput(event.target.value);
-  };
-
   const handleAddTruck = async () => {
     // fetch data add truck
     console.log({ licenseNumber, licenseType, truckType, productionYear });
@@ -139,20 +127,6 @@ export default function Truck() {
           </ButtonGroup>
         </Flex>
         <TableContainer width={"100%"}>
-          {/* <Select
-            placeholder="Select option"
-            w={["100%", "50%"]}
-            mb="1rem"
-            onChange={(value) => {
-              setTruckTypeInput(value);
-            }}
-          >
-            {listTruckType.map((type, idx) => (
-              <option key={idx} value={type}>
-                {type}
-              </option>
-            ))}
-          </Select> */}
           <Table variant="simple" width={"100%"}>
             <Thead>
               <Tr>
