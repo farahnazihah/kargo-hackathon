@@ -92,18 +92,18 @@ console.log(contentDriver)
 
   const handleAddDriver = () => {
     
-    // const item = {
-    //   driverName: null,
-    //   phoneNumber: null
-    // }
-    // axios.post('http://localhost:8080/api/drivers',payload)
-    // .then(response => {        
-    //   console.log(response.data)
-    //   window.location.reload();
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    // });
+    const item = {
+      driverName: driverName,
+      phoneNumber: phoneNumber
+    }
+    axios.post('http://localhost:8080/api/drivers',item)
+    .then(response => {        
+      console.log(response.data)
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   };
 
   return (
@@ -186,7 +186,7 @@ console.log(contentDriver)
               </FormControl>
 
               <FormControl mt={4}>
-                <FormLabel>Phne Number</FormLabel>
+                <FormLabel>Phone Number</FormLabel>
                 <Input onChange={(e) => setPhoneNumber(e.target.value)} />
               </FormControl>
             </ModalBody>
