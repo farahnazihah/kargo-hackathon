@@ -13,12 +13,26 @@ import {
   TableContainer,
   Select,
   Flex, Box, Heading, Spacer, ButtonGroup, Button, InputGroup, Input, InputRightElement,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  FormControl, FormLabel,
 } from "@chakra-ui/react";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Truck() {
   const router = useRouter();
   const [dataShipment, setDataShipment] = useState(undefined);
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [openModalAddShipment, setOpenModalAddShipment] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [origin, setOrigin] = useState();
+  const [destination, setDestination] = useState();
   
   useEffect(() => {
     const data = [
@@ -102,7 +116,7 @@ export default function Truck() {
           </Box>
           <Spacer />
           <ButtonGroup gap='2'>
-            <Button colorScheme='teal' padding="0px 30px" onClick={onOpen}> Add Shipment</Button>
+            <Button colorScheme='teal' padding="0px 30px" onClick={() => setOpenModalAddShipment(true)}> Add Shipment</Button>
             <InputGroup size='md'>
               <Input
                 pr='4.5rem'
@@ -149,7 +163,42 @@ export default function Truck() {
         </TableContainer>
       </PageLayout>
 
-      
+      <Modal
+        isOpen={openModalAddShipment}
+        onClose={() => setOpenModalAddShipment(false)}
+        size='xl'
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add Shipment</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>Origin</FormLabel>
+              <Input placeholder='Type Origin' onChange={(e) => setOrigin(e.target.value)}/>
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Destination</FormLabel>
+              <Input placeholder='Type Destination' onChange={(e) => setDestination(e.target.value)} />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Date</FormLabel>
+              <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+            </FormControl>
+
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3}>
+              Save
+            </Button>
+            <Button onClick={() => setOpenModalAddShipment(false)}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
+    
   );
 }
