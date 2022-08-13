@@ -1,5 +1,6 @@
 import PageLayout from "@components/PageLayout";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import {
   Table,
@@ -55,10 +56,24 @@ export default function Driver() {
       },
     ];
 
-    setDataDriver(data);
-    setContentDriver(data);
-  };
+    axios.get("http://localhost:8080/api/drivers").then(function (response) {
+      // handle success
+      console.log(response.data)
+      // setDataTruck(response.data.payload);
+      setDataDriver(response.data);
+      setContentDriver(response.data);
 
+
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+
+    // setDataDriver(data);
+    // setContentDriver(data);
+  };
+console.log(contentDriver)
   useEffect(() => {
     fetchDriverData();
   }, []);
@@ -76,8 +91,19 @@ export default function Driver() {
   };
 
   const handleAddDriver = () => {
-    console.log(licenseNumber, licenseType, driverType, productionYear);
-    fetchDriverData();
+    
+    // const item = {
+    //   driverName: null,
+    //   phoneNumber: null
+    // }
+    // axios.post('http://localhost:8080/api/drivers',payload)
+    // .then(response => {        
+    //   console.log(response.data)
+    //   window.location.reload();
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    // });
   };
 
   return (
@@ -125,7 +151,7 @@ export default function Driver() {
               </Tr>
             </Thead>
             <Tbody>
-              {contentDriver?.map((driver, index) => {
+              {contentDriver?.map((driver) => {
                 return (
                   <Tr key={driver.id}>
                     <Td>
@@ -135,12 +161,12 @@ export default function Driver() {
                           router.push(`/transport/driver/${driver.id}`)
                         }
                       >
-                        {driver.driver_name}
+                        {driver.driverName}
                       </Button>
                     </Td>
-                    <Td>{driver.phone_number}</Td>
-                    <Td>{driver.created_at}</Td>
-                    <Td>{driver.status}</Td>
+                    <Td>{driver.phoneNumber}</Td>
+                    <Td>{driver.createdAt}</Td>
+                    <Td>{driver.status ? 'Active' : 'Nonactive'}</Td>
                   </Tr>
                 );
               })}

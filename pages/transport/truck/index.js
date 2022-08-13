@@ -1,6 +1,7 @@
 import PageLayout from "@components/PageLayout";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import axios from "axios";
 import {
   Table,
   Thead,
@@ -53,24 +54,54 @@ export default function Truck() {
   const fetchTruckData = async () => {
     let res = [];
     try {
-      res = await fetch("localhost:8080/api/trucks");
+      res = await fetch("http://localhost:8080/api/trucks");
       res = res.json();
     } catch (error) {
       console.log(error);
     }
     console.log(res);
 
-    setDataTruck(res);
-    setContentTruck(res);
+    axios.get("http://localhost:8080/api/trucks").then(function (response) {
+      // handle success
+      console.log(response.data)
+      setDataTruck(response.data.payload);
+      setContentTruck(response.data.payload);
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+
+    // setDataTruck(res);
+
   };
 
   const handleDeactivate = async (id) => {
     // fetch data togle truck
-    const payload = { id: id, status: false };
-    let res = await fetch("localhost:8080/api/trucks", {
-      method: "PUT",
-      body: JSON.stringify(payload),
+    axios.get("http://localhost:8080/api/trucks/"+id).then(function (response) {
+      const payload = { 
+        id: id, 
+        status: false ,
+        truckLicenseNumber: response.data.payload.truckLicenseNumber,
+        truckType: response.data.payload.truckType,
+        truckPlateType: response.data.payload.truckPlateType,
+        truckProductionYear: response.data.payload.truckProductionYear,
+      };
+
+      axios.put('http://localhost:8080/api/trucks',payload)
+      .then(response => {        
+        console.log(response.data)
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
     });
+    
+
     fetchTruckData();
   };
 
@@ -90,17 +121,18 @@ export default function Truck() {
       truckLicenseNumber: licenseNumber,
       truckType: truckType,
       truckProductionYear: productionYear,
-      attachmentIdSTNK: stnk,
-      attachmentIdKIR: kir,
+      status : true,
+      // attachmentIdSTNK: stnk,
+      // attachmentIdKIR: kir,
     };
 
-    let res = await fetch(url, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
+    axios.post('http://localhost:8080/api/trucks',payload)
+    .then(response => {        
+      console.log(response.data)
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.log(error);
     });
 
     fetchTruckData();
@@ -148,12 +180,12 @@ export default function Truck() {
                           router.push(`/transport/truck/${truck.id}`)
                         }
                       >
-                        {truck.license}
+                        {truck.truckLicenseNumber}
                       </Button>
                     </Td>
-                    <Td>{truck.type}</Td>
-                    <Td>{truck.plate}</Td>
-                    <Td>{truck.production}</Td>
+                    <Td>{truck.truckType}</Td>
+                    <Td>{truck.truckPlateType}</Td>
+                    <Td>{truck.truckProductionYear}</Td>
                     <Td>
                       <Button onClick={() => handleUpdateTruck(truck.id)}>
                         Update
@@ -178,27 +210,27 @@ export default function Truck() {
               <FormControl>
                 <FormLabel>License Number</FormLabel>
                 <Input onChange={(e) => setLicenseNumber(e.target.value)}>
-                  {editTruck.license}
+                  {editTruck.truckLicenseNumber}
                 </Input>
               </FormControl>
 
               <FormControl mt={4}>
                 <FormLabel>License Type</FormLabel>
                 <Input onChange={(e) => setLicenseType(e.target.value)}>
-                  {editTruck.license_type}
+                  {editTruck.truckLicenseNumber_type}
                 </Input>
               </FormControl>
 
               <FormControl mt={4}>
                 <FormLabel>Truck Type</FormLabel>
                 <Input onChange={(e) => setTruckType(e.target.value)}>
-                  {editTruck.type}
+                  {editTruck.truckType}
                 </Input>
               </FormControl>
               <FormControl mt={4}>
                 <FormLabel>Production Year</FormLabel>
                 <Input onChange={(e) => setProductionYear(e.target.value)}>
-                  {editTruck.production}
+                  {editTruck.truckProductionYear}
                 </Input>
               </FormControl>
               <FormControl mt={4}>

@@ -58,30 +58,6 @@ export default function Truck() {
   ]);
   
   useEffect(() => {
-    const data = [
-      {
-        id: 1,
-        license: "ABC1234",
-        type: "tronton",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: 2,
-        license: "ABC1235",
-        type: "tronton",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: 3,
-        license: "ABC1236",
-        type: "container",
-        plate: "yellow",
-        production: "2002",
-      },
-    ]
-
     axios.get("http://localhost:8080/api/trucks/active").then(function (response) {
       // handle success
       console.log(response.data)
@@ -96,30 +72,6 @@ export default function Truck() {
   }, []);
 
   useEffect(() => {
-    const data = [
-      {
-        id: 1,
-        driver_name : "Driver 1",
-        phone_number : "081234567890",
-        created_at : "2022-08-12",
-        status : true,
-      },
-      {
-        id: 2,
-        driver_name : "Driver 2",
-        phone_number : "081234567890",
-        created_at : "2022-08-12",
-        status : true,
-      },
-      {
-        id: 3,
-        driver_name : "Driver 3",
-        phone_number : "081234567890",
-        created_at : "2022-08-12",
-        status : true,
-      },
-    ]
-
     axios.get("http://localhost:8080/api/drivers/active").then(function (response) {
       // handle success
       console.log(response.data.payload)
@@ -132,76 +84,6 @@ export default function Truck() {
 
 
   }, []);
-
-  useEffect(() => {
-    const data = [
-      {
-        id: 1,
-        shipmentNumber: "ABC1234",
-        truck: {
-          id: 2,
-          license: "ABC1234",
-          type: "tronton",
-          plate: "yellow",
-          production: "2002",
-        },
-        driver : {
-          id: 1,
-          driver_name : "Driver 1",
-          phone_number : "081234567890",
-          created_at : "2022-08-12",
-          status : true,
-        },
-        origin : "Jakarta",
-        destination : "Bandung",
-        loadingDate : "2022-08-13",
-        status : "Ongoing to Origin",
-      },
-      {
-        id: 1,
-        shipmentNumber: "ABC1235",
-        truck: {
-          id: 2,
-          license: "ABC1234",
-          type: "tronton",
-          plate: "yellow",
-          production: "2002",
-        },
-        driver : {
-          id: 1,
-          driver_name : "Driver 2",
-          phone_number : "081234567890",
-          created_at : "2022-08-12",
-          status : true,
-        },
-        origin : "Jakarta",
-        destination : "Bandung",
-        loadingDate : "2022-08-13",
-        status : "Ongoing to Origin",
-      },
-      {
-        id: 1,
-        shipmentNumber: "ABC1236",
-        truck: {
-          id: 2,
-          license: "ABC1234",
-          type: "tronton",
-          plate: "yellow",
-          production: "2002",
-        },
-        driver : {
-          id: 1,
-          driver_name : "Driver 3",
-          phone_number : "081234567890",
-          created_at : "2022-08-12",
-          status : true,
-        },
-        origin : "Jakarta",
-        destination : "Bandung",
-        loadingDate : "2022-08-13",
-        status : "Ongoing to Origin",
-      },
-    ];
 
     axios.get("http://localhost:8080/api/shipment").then(function (response) {
         // handle success
