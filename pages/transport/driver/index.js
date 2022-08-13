@@ -12,83 +12,106 @@ import {
   TableCaption,
   TableContainer,
   Select,
+  Button,
+  Flex,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Box,
+  Spacer,
+  ButtonGroup,
+  InputGroup,
+  Input,
+  InputRightElement,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 
-export default function Truck() {
-  const router = useRouter();
-  const truckType = ["Tronton", "Container", "CDE"];
-  const [dataTruck, setDataTruck] = useState([]);
-  const [contentTruck, setContentTruck] = useState([]);
-  const [truckTypeInput, setTruckTypeInput] = useState("");
+import DatePicker from "react-datepicker";
 
-  useEffect(() => {
+export default function Driver() {
+  const router = useRouter();
+  const listDriverType = ["Tronton", "Container", "CDE"];
+  const [dataDriver, setDataDriver] = useState([]);
+  const [contentDriver, setContentDriver] = useState([]);
+  const [driverTypeInput, setDriverTypeInput] = useState("");
+
+  const [showModal, setShowModal] = useState(false);
+  const [licenseNumber, setLicenseNumber] = useState("");
+  const [licenseType, setLicenseType] = useState("");
+  const [driverType, setDriverType] = useState("");
+  const [productionYear, setProductionYear] = useState("");
+
+  const fetchDriverData = () => {
     const data = [
       {
         id: "1",
-        license: "ABC1234",
-        type: "tronton",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: "2",
-        license: "ABC1234",
-        type: "tronton",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: "3",
-        license: "ABC1234",
-        type: "container",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: "4",
-        license: "ABC1234",
-        type: "CDE",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: "5",
-        license: "ABC1234",
-        type: "tronton",
-        plate: "yellow",
-        production: "2002",
+        driver_name: "ABC1234",
+        phone_number: "tronton",
+        created_at: "yellow",
+        status: "2002",
       },
     ];
 
-    setDataTruck(data);
-    setContentTruck(data);
+    setDataDriver(data);
+    setContentDriver(data);
+  };
+
+  useEffect(() => {
+    fetchDriverData();
   }, []);
 
-  //   useEffect(() => {
-  //     const filteredData = dataTruck.filter(({ type }) => {
-  //       type === truckTypeInput;
-  //     });
-  //     setContentTruck(filteredData);
-  //     console.log(contentTruck);
-  //   }, [truckTypeInput]);
+  // useEffect(() => {
+  //   const filteredData = dataDriver.filter(
+  //     (data) => data.type === driverTypeInput
+  //   );
+  //   setContentDriver(filteredData);
+  //   console.log(contentDriver);
+  // }, [driverTypeInput]);
 
   const handleInput = (event) => {
-    setTruckTypeInput(event.target.value);
+    setDriverTypeInput(event.target.value);
+  };
+
+  const handleAddDriver = () => {
+    console.log(licenseNumber, licenseType, driverType, productionYear);
+    fetchDriverData();
   };
 
   return (
     <>
       <PageLayout>
+        <Flex
+          minWidth="max-content"
+          marginBottom="20px"
+          gap="2"
+          flexDir={["column", "row"]}
+        >
+          <Spacer />
+          <ButtonGroup gap="2">
+            <Button
+              colorScheme="teal"
+              padding="0px 30px"
+              onClick={() => setShowModal(true)}
+            >
+              Add Driver
+            </Button>
+          </ButtonGroup>
+        </Flex>
         <TableContainer width={"100%"}>
           <Select
             placeholder="Select option"
             w={["100%", "50%"]}
             mb="1rem"
             onChange={(value) => {
-              setTruckTypeInput(value);
+              setDriverTypeInput(value);
             }}
           >
-            {truckType.map((type, idx) => (
+            {listDriverType.map((type, idx) => (
               <option key={idx} value={type}>
                 {type}
               </option>
@@ -97,26 +120,74 @@ export default function Truck() {
           <Table variant="simple" width={"100%"}>
             <Thead>
               <Tr>
-                <Th>License Number</Th>
-                <Th>Truck Type</Th>
-                <Th>Plate Type</Th>
-                <Th>Production Year</Th>
+                <Th>Driver Name</Th>
+                <Th>Phone Number</Th>
+                <Th>Created At</Th>
+                <Th>Status</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {contentTruck?.map((truck, index) => {
+              {contentDriver?.map((driver, index) => {
                 return (
-                  <Tr key={truck.id}>
-                    <Td>{truck.license}</Td>
-                    <Td>{truck.type}</Td>
-                    <Td>{truck.plate}</Td>
-                    <Td>{truck.production}</Td>
+                  <Tr key={driver.id}>
+                    <Td>
+                      <Button
+                        variant="ghost"
+                        onClick={() =>
+                          router.push(`/transport/driver/${driver.id}`)
+                        }
+                      >
+                        {driver.driver_name}
+                      </Button>
+                    </Td>
+                    <Td>{driver.phone_number}</Td>
+                    <Td>{driver.created_at}</Td>
+                    <Td>{driver.status}</Td>
                   </Tr>
                 );
               })}
             </Tbody>
           </Table>
         </TableContainer>
+
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="xl">
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Add Driver</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <FormControl>
+                <FormLabel>License Number</FormLabel>
+                <Input onChange={(e) => setLicenseNumber(e.target.value)} />
+              </FormControl>
+
+              <FormControl mt={4}>
+                <FormLabel>License Type</FormLabel>
+                <Input onChange={(e) => setLicenseType(e.target.value)} />
+              </FormControl>
+
+              <FormControl mt={4}>
+                <FormLabel>Driver Type</FormLabel>
+                <Input onChange={(e) => setDriverType(e.target.value)} />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>Production Year</FormLabel>
+                <Input onChange={(e) => setProductionYear(e.target.value)} />
+              </FormControl>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                onClick={() => handleAddDriver()}
+              >
+                Save
+              </Button>
+              <Button onClick={() => setShowModal(false)}>Cancel</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </PageLayout>
     </>
   );

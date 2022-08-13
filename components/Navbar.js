@@ -16,7 +16,13 @@ const Navbar = () => {
   return (
     <Box borderBottomColor="primary" borderWidth="5px">
       <Navbar width="100%" as="nav" py={2} px={["5px", "5rem"]}>
-        <Image src={"/logo.png"} alt="logo" width={"100px"} mr="5rem" />
+        <Image
+          display={["none", "none", "block"]}
+          src={"/logo.png"}
+          alt="logo"
+          width={"100px"}
+          mr="5rem"
+        />
         <HStack spacing="2rem">
           <NextLink href="/" passHref>
             <Button
