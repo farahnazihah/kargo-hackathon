@@ -85,6 +85,7 @@ export default function Truck() {
 
   }, []);
 
+  useEffect(() => {
     axios.get("http://localhost:8080/api/shipment").then(function (response) {
         // handle success
         console.log(response.data.payload)
