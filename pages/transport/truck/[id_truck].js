@@ -7,14 +7,8 @@ export default function Add() {
   const router = useRouter();
   const { id_truck } = router.query;
   const [data, setData] = useState({});
-  useEffect(() => {
-    const res = {
-      id: "1",
-      license: "ABC1234",
-      type: "tronton",
-      plate: "yellow",
-      production: "2002",
-    };
+  useEffect(async () => {
+    let res = await fetch(`localhost:8080/api/trucks/${id_truck}`);
     setData(res);
     console.log(data);
   }, [id_truck]);

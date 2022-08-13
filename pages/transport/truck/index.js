@@ -46,47 +46,23 @@ export default function Truck() {
   const [truckType, setTruckType] = useState("");
   const [productionYear, setProductionYear] = useState("");
 
-  const fetchTruckData = () => {
-    const data = [
-      {
-        id: "1",
-        license: "ABC1234",
-        type: "tronton",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: "2",
-        license: "ABC1234",
-        type: "tronton",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: "3",
-        license: "ABC1234",
-        type: "container",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: "4",
-        license: "ABC1234",
-        type: "CDE",
-        plate: "yellow",
-        production: "2002",
-      },
-      {
-        id: "5",
-        license: "ABC1234",
-        type: "tronton",
-        plate: "yellow",
-        production: "2002",
-      },
-    ];
+  // fetch data truck
+  const fetchTruckData = async () => {
+    let res = await fetch("localhost:8080/api/trucks");
+    res = res.json();
 
-    setDataTruck(data);
-    setContentTruck(data);
+    setDataTruck(res);
+    setContentTruck(res);
+  };
+
+  const handleDeactivate = async (id) => {
+    // fetch data togle truck
+    const payload = { id: id, status: false };
+    let res = await fetch("localhost:8080/api/trucks", {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+    fetchTruckData();
   };
 
   useEffect(() => {
@@ -105,8 +81,24 @@ export default function Truck() {
     setTruckTypeInput(event.target.value);
   };
 
-  const handleAddTruck = () => {
-    console.log(licenseNumber, licenseType, truckType, productionYear);
+  const handleAddTruck = async () => {
+    // fetch data add truck
+    console.log({ licenseNumber, licenseType, truckType, productionYear });
+    const payload = {
+      truckLicenseNumber: licenseNumber,
+      truckType: truckType,
+      truckProductionYear: productionYear,
+    };
+
+    let res = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+    });
+
     fetchTruckData();
   };
 
@@ -152,6 +144,7 @@ export default function Truck() {
                 <Th>Truck Type</Th>
                 <Th>Plate Type</Th>
                 <Th>Production Year</Th>
+                <Th>Action</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -171,6 +164,12 @@ export default function Truck() {
                     <Td>{truck.type}</Td>
                     <Td>{truck.plate}</Td>
                     <Td>{truck.production}</Td>
+                    <Td>
+                      <Button>Update</Button>
+                      <Button onClick={() => handleDeactivate(truck.id)}>
+                        Deactivate Unit
+                      </Button>
+                    </Td>
                   </Tr>
                 );
               })}
