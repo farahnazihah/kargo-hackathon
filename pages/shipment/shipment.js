@@ -81,7 +81,6 @@ export default function Truck() {
     ]
 
     setDataTruck(data);
-    console.log(dataTruck);
   }, []);
 
   useEffect(() => {
@@ -110,7 +109,6 @@ export default function Truck() {
     ]
 
     setDataDriver(data);
-    console.log(dataDriver);
   }, []);
 
   useEffect(() => {
@@ -208,19 +206,18 @@ export default function Truck() {
   }
 
   const handleAllocateShipment = () => {
-    console.log(driverIDChoosed)
-    console.log(truckIDChoosed)
     if(!driverIDChoosed || driverIDChoosed == "" || !truckIDChoosed || truckIDChoosed == ""){
       alert("Silahkan lengkapi form data terlebih dahulu")
     } else {
       const item = {
+        id : shipmentChoosed?.id,
         id_truck : truckIDChoosed,
         id_driver : driverIDChoosed,
         status : 'Allocated',
       }
       console.log(item)
       
-      // axios.post('url',item)
+      // axios.put('url',item)
       // .then(response => {        
       // })
       // .catch((error) => {
@@ -230,28 +227,24 @@ export default function Truck() {
   }
 
   const handleUpdateStatus = () => {
-    // console.log(statusShipmentChoosed)
-    // console.log(truckIDChoosed)
     if(!statusShipmentChoosed || statusShipmentChoosed == ""){
       alert("Silahkan lengkapi form data terlebih dahulu")
     } else {
       const item = {
+        id : shipmentChoosed?.id,
         status : statusShipmentChoosed,
       }
-      console.log(item)
       
-      // axios.post('url',item)
+      // axios.put('url',item)
       // .then(response => {        
       // })
       // .catch((error) => {
       //   console.log(error);
       // });
-    // }
+    }
   }
 
   const handleSelecOption = (e, s) => {
-    console.log(e.target.value)
-    console.log(s)
     setShipmentChoosed(s)
     if(e.target.value == 'allocateShipment'){
       setOpenModalAllocateShipment(true)
@@ -453,6 +446,5 @@ export default function Truck() {
       </Modal>
       
     </>
-    
   );
 }
