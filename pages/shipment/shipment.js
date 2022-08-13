@@ -180,8 +180,8 @@ export default function Truck() {
         console.log(response.data)
         const item = {
           id : shipmentChoosed?.id,
-          idTruck : parseInt(truckIDChoosed),
-          idDriver : parseInt(driverIDChoosed),
+          idTruck : response.data.payload.idTruck,
+          idDriver : response.data.payload.idDriver,
           status : statusShipmentChoosed,
           loadingDate : response.data.payload.loadingDate,
           origin : response.data.payload.origin,
