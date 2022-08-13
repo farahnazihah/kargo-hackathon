@@ -1,5 +1,6 @@
 import PageLayout from "@components/PageLayout";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import {
   Table,
@@ -11,8 +12,7 @@ import {
   Td,
   TableCaption,
   TableContainer,
-  Select,
-  Flex, Box, Heading, Spacer, ButtonGroup, Button, InputGroup, Input, InputRightElement,
+  Select, Flex, Box, Heading, Spacer, ButtonGroup, Button, InputGroup, Input, InputRightElement,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -24,13 +24,14 @@ import {
 } from "@chakra-ui/react";
 
 import DatePicker from "react-datepicker";
+import dateFormat from "dateformat";
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function Truck() {
   const router = useRouter();
   const [dataShipment, setDataShipment] = useState(undefined);
   const [openModalAddShipment, setOpenModalAddShipment] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
+  const [loadingDate, setLoadingDate] = useState(new Date());
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState();
   
@@ -105,8 +106,30 @@ export default function Truck() {
     ];
 
     setDataShipment(data);
-    console.log(dataShipment);
   }, []);
+
+  const handleAddShipment = () => {
+    console.log(destination)
+    console.log(origin)
+    console.log(loadingDate)
+    if(!destination || destination == "" || !origin || origin == ""){
+      alert("Silahkan lengkapi form data terlebih dahulu")
+    } else {
+      const item = {
+        origin : origin,
+        destination : destination,
+        loading_date : dateFormat(loadingDate, "yyyy-mm-dd"),
+      }
+      console.log(item)
+      
+      // axios.post('url',item)
+      // .then(response => {        
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
+    }
+  }
 
   return (
     <>
@@ -185,13 +208,12 @@ export default function Truck() {
 
             <FormControl mt={4}>
               <FormLabel>Date</FormLabel>
-              <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+              <DatePicker selected={loadingDate} onChange={(date) => setLoadingDate(date)} />
             </FormControl>
-
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme='blue' mr={3}>
+            <Button colorScheme='blue' mr={3} onClick={() => handleAddShipment()}>
               Save
             </Button>
             <Button onClick={() => setOpenModalAddShipment(false)}>Cancel</Button>
