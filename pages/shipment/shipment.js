@@ -39,10 +39,21 @@ export default function Truck() {
   const [openModalAllocateShipment, setOpenModalAllocateShipment] = useState(false);
   const [openModalUpdateStatus, setOpenModalUpdateStatus] = useState(false);
   const [shipmentChoosed, setShipmentChoosed] = useState({})
-
+  const [truckIDChoosed, setTruckIDChoosed] = useState({})
+  const [driverIDChoosed, setDriverIDChoosed] = useState({})
+  const [statusShipmentChoosed, setStatusShipmentChoosed] = useState({})
+  
   const [loadingDate, setLoadingDate] = useState(new Date());
   const [origin, setOrigin] = useState();
   const [destination, setDestination] = useState();
+
+  const [listStatus, setListStatus] = useState([
+    "Ongoing to Origin",
+    "At Origin",
+    "Ongoing to Destination",
+    "At Destination",
+    "Completed"
+  ]);
   
   useEffect(() => {
     const data = [
@@ -176,9 +187,6 @@ export default function Truck() {
   }, []);
 
   const handleAddShipment = () => {
-    console.log(destination)
-    console.log(origin)
-    console.log(loadingDate)
     if(!destination || destination == "" || !origin || origin == ""){
       alert("Silahkan lengkapi form data terlebih dahulu")
     } else {
@@ -186,6 +194,7 @@ export default function Truck() {
         origin : origin,
         destination : destination,
         loading_date : dateFormat(loadingDate, "yyyy-mm-dd"),
+        status : 'Created',
       }
       console.log(item)
       
@@ -196,6 +205,48 @@ export default function Truck() {
       //   console.log(error);
       // });
     }
+  }
+
+  const handleAllocateShipment = () => {
+    console.log(driverIDChoosed)
+    console.log(truckIDChoosed)
+    if(!driverIDChoosed || driverIDChoosed == "" || !truckIDChoosed || truckIDChoosed == ""){
+      alert("Silahkan lengkapi form data terlebih dahulu")
+    } else {
+      const item = {
+        id_truck : truckIDChoosed,
+        id_driver : driverIDChoosed,
+        status : 'Allocated',
+      }
+      console.log(item)
+      
+      // axios.post('url',item)
+      // .then(response => {        
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
+    }
+  }
+
+  const handleUpdateStatus = () => {
+    // console.log(statusShipmentChoosed)
+    // console.log(truckIDChoosed)
+    if(!statusShipmentChoosed || statusShipmentChoosed == ""){
+      alert("Silahkan lengkapi form data terlebih dahulu")
+    } else {
+      const item = {
+        status : statusShipmentChoosed,
+      }
+      console.log(item)
+      
+      // axios.post('url',item)
+      // .then(response => {        
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
+    // }
   }
 
   const handleSelecOption = (e, s) => {
@@ -326,30 +377,81 @@ export default function Truck() {
           <ModalBody pb={6}>
             <FormControl>
               <FormLabel>Truck</FormLabel>
-              <Input placeholder='Type Origin' />
+              <Select
+                placeholder="Select truck"
+                mb="1rem"
+                onChange={(e) => setTruckIDChoosed(e.target.value)}
+              >
+                {dataTruck?.map((item) => (
+                  <option value={item.id}>
+                    {item.license} - {item.type}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>Driver</FormLabel>
-              <Input placeholder='Type Destination' />
+              <Select
+                placeholder="Select driver"
+                mb="1rem"
+                onChange={(e) => setDriverIDChoosed(e.target.value)}
+              >
+                {dataDriver?.map((item) => (
+                  <option value={item.id}>
+                    {item.driver_name} - {item.phone_number}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
 
           </ModalBody>
 
           <ModalFooter>
             <Button onClick={() => setOpenModalAllocateShipment(false)}>Cancel</Button>
-            <Button colorScheme='blue' mr={3}>
+            <Button colorScheme='blue' mr={3} onClick={() => handleAllocateShipment()}>
               Allocate
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
 
-      {/* <AllocateShipment 
-        openModalAllocateShipment={openModalAllocateShipment}
-        setOpenModalAllocateShipment={setOpenModalAllocateShipment}
-        shipmentChoosed={shipmentChoosed}
-      /> */}
+
+      <Modal
+        isOpen={openModalUpdateStatus}
+        onClose={() => setOpenModalUpdateStatus(false)}
+        size='xl'
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Update Status {shipmentChoosed?.shipment_number}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <FormLabel>Status</FormLabel>
+              <Select
+                placeholder="Select status"
+                mb="1rem"
+                onChange={(e) => setStatusShipmentChoosed(e.target.value)}
+              >
+                {listStatus?.map((item) => (
+                  <option value={item}>
+                    {item}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button onClick={() => setOpenModalUpdateStatus(false)}>Cancel</Button>
+            <Button colorScheme='blue' mr={3} onClick={() => handleUpdateStatus()}>
+              Update
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      
     </>
     
   );
