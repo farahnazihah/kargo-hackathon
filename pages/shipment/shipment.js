@@ -40,9 +40,9 @@ export default function Truck() {
   const [openModalAllocateShipment, setOpenModalAllocateShipment] = useState(false);
   const [openModalUpdateStatus, setOpenModalUpdateStatus] = useState(false);
   const [shipmentChoosed, setShipmentChoosed] = useState({})
-  const [truckIDChoosed, setTruckIDChoosed] = useState({})
-  const [driverIDChoosed, setDriverIDChoosed] = useState({})
-  const [statusShipmentChoosed, setStatusShipmentChoosed] = useState({})
+  const [truckIDChoosed, setTruckIDChoosed] = useState()
+  const [driverIDChoosed, setDriverIDChoosed] = useState()
+  const [statusShipmentChoosed, setStatusShipmentChoosed] = useState()
   
   const [loadingDate, setLoadingDate] = useState(new Date());
   const [origin, setOrigin] = useState();
@@ -82,7 +82,17 @@ export default function Truck() {
       },
     ]
 
-    setDataTruck(data);
+    axios.get("http://localhost:8080/api/trucks/active").then(function (response) {
+      // handle success
+      console.log(response.data)
+      setDataTruck(response.data.payload);
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+
+
   }, []);
 
   useEffect(() => {
@@ -110,14 +120,24 @@ export default function Truck() {
       },
     ]
 
-    setDataDriver(data);
+    axios.get("http://localhost:8080/api/drivers/active").then(function (response) {
+      // handle success
+      console.log(response.data.payload)
+      setDataDriver(response.data.payload);
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+
+
   }, []);
 
   useEffect(() => {
     const data = [
       {
         id: 1,
-        shipment_number: "ABC1234",
+        shipmentNumber: "ABC1234",
         truck: {
           id: 2,
           license: "ABC1234",
@@ -134,12 +154,12 @@ export default function Truck() {
         },
         origin : "Jakarta",
         destination : "Bandung",
-        loading_date : "2022-08-13",
+        loadingDate : "2022-08-13",
         status : "Ongoing to Origin",
       },
       {
         id: 1,
-        shipment_number: "ABC1235",
+        shipmentNumber: "ABC1235",
         truck: {
           id: 2,
           license: "ABC1234",
@@ -156,12 +176,12 @@ export default function Truck() {
         },
         origin : "Jakarta",
         destination : "Bandung",
-        loading_date : "2022-08-13",
+        loadingDate : "2022-08-13",
         status : "Ongoing to Origin",
       },
       {
         id: 1,
-        shipment_number: "ABC1236",
+        shipmentNumber: "ABC1236",
         truck: {
           id: 2,
           license: "ABC1234",
@@ -178,20 +198,30 @@ export default function Truck() {
         },
         origin : "Jakarta",
         destination : "Bandung",
-        loading_date : "2022-08-13",
+        loadingDate : "2022-08-13",
         status : "Ongoing to Origin",
       },
     ];
 
-    setDataShipment(data);
-    setDataShipmentFiltered(data);
+    axios.get("http://localhost:8080/api/shipment").then(function (response) {
+        // handle success
+        console.log(response.data.payload)
+        setDataShipment(response.data.payload);
+        setDataShipmentFiltered(response.data.payload);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+
+
   }, []);
 
   const handleSearch = () => {
     if(!search || search == ""){
       setDataShipmentFiltered(dataShipment);
     } else {
-      let searchValue = dataShipment.filter(d => d.shipment_number == search);
+      let searchValue = dataShipment.filter(d => d.shipmentNumber == search);
       setDataShipmentFiltered(searchValue);
     }
   }
@@ -203,29 +233,52 @@ export default function Truck() {
       const item = {
         origin : origin,
         destination : destination,
-        loading_date : dateFormat(loadingDate, "yyyy-mm-dd"),
+        loadingDate : dateFormat(loadingDate, "yyyy-mm-dd"),
         status : 'Created',
       }
-      
-      // axios.post('url',item)
-      // .then(response => {        
-      // })
-      // .catch((error) => {
-      //   console.log(error);
-      // });
+      axios.post('http://localhost:8080/api/shipment',item)
+      .then(response => {        
+        console.log(response.data)
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     }
   }
 
   const handleAllocateShipment = () => {
+    console.log(driverIDChoosed)
     if(!driverIDChoosed || driverIDChoosed == "" || !truckIDChoosed || truckIDChoosed == ""){
       alert("Silahkan lengkapi form data terlebih dahulu")
     } else {
-      const item = {
-        id : shipmentChoosed?.id,
-        id_truck : truckIDChoosed,
-        id_driver : driverIDChoosed,
-        status : 'Allocated',
-      }
+      axios.get('http://localhost:8080/api/shipment/'+shipmentChoosed?.id)
+      .then(response => {        
+        console.log(response.data)
+        const item = {
+          id : shipmentChoosed?.id,
+          idTruck : parseInt(truckIDChoosed),
+          idDriver : parseInt(driverIDChoosed),
+          status : 'Allocated',
+          loadingDate : response.data.payload.loadingDate,
+          origin : response.data.payload.origin,
+          destination : response.data.payload.destination,
+          shipmentNumber : response.data.payload.shipmentNumber,
+        }
+        console.log(item)
+        axios.put('http://localhost:8080/api/shipment',item)
+        .then(response => {        
+          console.log(response.data)
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
       
       // axios.put('url',item)
       // .then(response => {        
@@ -240,10 +293,33 @@ export default function Truck() {
     if(!statusShipmentChoosed || statusShipmentChoosed == ""){
       alert("Silahkan lengkapi form data terlebih dahulu")
     } else {
-      const item = {
-        id : shipmentChoosed?.id,
-        status : statusShipmentChoosed,
-      }
+      axios.get('http://localhost:8080/api/shipment/'+shipmentChoosed?.id)
+      .then(response => {        
+        console.log(response.data)
+        const item = {
+          id : shipmentChoosed?.id,
+          idTruck : parseInt(truckIDChoosed),
+          idDriver : parseInt(driverIDChoosed),
+          status : statusShipmentChoosed,
+          loadingDate : response.data.payload.loadingDate,
+          origin : response.data.payload.origin,
+          destination : response.data.payload.destination,
+          shipmentNumber : response.data.payload.shipmentNumber,
+        }
+        console.log(item)
+        axios.put('http://localhost:8080/api/shipment',item)
+        .then(response => {        
+          console.log(response.data)
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
       
       // axios.put('url',item)
       // .then(response => {        
@@ -305,12 +381,12 @@ export default function Truck() {
               {dataShipmentFiltered?.map((s, index) => {
                 return (
                   <Tr key={s.id}>
-                    <Td>{s.shipment_number}</Td>
-                    <Td>{s.truck.license}</Td>
-                    <Td>{s.driver.driver_name}</Td>
+                    <Td>{s.shipmentNumber}</Td>
+                    <Td>{s.truck?.truckLicenseNumber}</Td>
+                    <Td>{s.driver?.driverName}</Td>
                     <Td>{s.origin}</Td>
                     <Td>{s.destination}</Td>
-                    <Td>{s.loading_date}</Td>
+                    <Td>{s.loadingDate}</Td>
                     <Td>{s.status}</Td>
                     <Td>
                       <Select
@@ -376,7 +452,7 @@ export default function Truck() {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Allocate Shipment {shipmentChoosed?.shipment_number}</ModalHeader>
+          <ModalHeader>Allocate Shipment {shipmentChoosed?.shipmentNumber}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
@@ -388,7 +464,7 @@ export default function Truck() {
               >
                 {dataTruck?.map((item) => (
                   <option value={item.id}>
-                    {item.license} - {item.type}
+                    {item.truckLicenseNumber} - {item.truckType}
                   </option>
                 ))}
               </Select>
@@ -403,7 +479,7 @@ export default function Truck() {
               >
                 {dataDriver?.map((item) => (
                   <option value={item.id}>
-                    {item.driver_name} - {item.phone_number}
+                    {item.driverName} - {item.phoneNumber}
                   </option>
                 ))}
               </Select>
@@ -428,7 +504,7 @@ export default function Truck() {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Update Status {shipmentChoosed?.shipment_number}</ModalHeader>
+          <ModalHeader>Update Status {shipmentChoosed?.shipmentNumber}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
