@@ -39,17 +39,26 @@ export default function Truck() {
   const [dataTruck, setDataTruck] = useState([]);
   const [contentTruck, setContentTruck] = useState([]);
   const [truckTypeInput, setTruckTypeInput] = useState("");
+  const [editTruck, setEditTruck] = useState({});
 
   const [showModal, setShowModal] = useState(false);
   const [licenseNumber, setLicenseNumber] = useState("");
   const [licenseType, setLicenseType] = useState("");
   const [truckType, setTruckType] = useState("");
   const [productionYear, setProductionYear] = useState("");
+  const [stnk, setStnk] = useState(undefined);
+  const [kir, setKir] = useState(undefined);
 
   // fetch data truck
   const fetchTruckData = async () => {
-    let res = await fetch("localhost:8080/api/trucks");
-    res = res.json();
+    let res = [];
+    try {
+      res = await fetch("localhost:8080/api/trucks");
+      res = res.json();
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(res);
 
     setDataTruck(res);
     setContentTruck(res);
@@ -88,6 +97,8 @@ export default function Truck() {
       truckLicenseNumber: licenseNumber,
       truckType: truckType,
       truckProductionYear: productionYear,
+      attachmentIdSTNK: stnk,
+      attachmentIdKIR: kir,
     };
 
     let res = await fetch(url, {
@@ -123,7 +134,7 @@ export default function Truck() {
           </ButtonGroup>
         </Flex>
         <TableContainer width={"100%"}>
-          <Select
+          {/* <Select
             placeholder="Select option"
             w={["100%", "50%"]}
             mb="1rem"
@@ -136,7 +147,7 @@ export default function Truck() {
                 {type}
               </option>
             ))}
-          </Select>
+          </Select> */}
           <Table variant="simple" width={"100%"}>
             <Thead>
               <Tr>
@@ -200,6 +211,17 @@ export default function Truck() {
               <FormControl mt={4}>
                 <FormLabel>Production Year</FormLabel>
                 <Input onChange={(e) => setProductionYear(e.target.value)} />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>STNK</FormLabel>
+                <Input
+                  type={"file"}
+                  onChange={(e) => setStnk(e.target.value)}
+                />
+              </FormControl>
+              <FormControl mt={4}>
+                <FormLabel>KIR</FormLabel>
+                <Input type={"file"} onChange={(e) => setKir(e.target.value)} />
               </FormControl>
             </ModalBody>
 
