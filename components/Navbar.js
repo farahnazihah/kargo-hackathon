@@ -24,7 +24,7 @@ const Navbar = () => {
           mr="5rem"
         />
         <HStack spacing="2rem">
-          <NextLink href="/" passHref>
+          <NextLink href="/shipment/shipment" passHref>
             <Button
               as="a"
               bg={"white"}
@@ -33,7 +33,7 @@ const Navbar = () => {
               Shipment
             </Button>
           </NextLink>
-          <NextLink href="/" passHref>
+          <NextLink href="/transport/truck" passHref>
             <Button
               as="a"
               bg={"white"}
@@ -42,7 +42,7 @@ const Navbar = () => {
               Truck
             </Button>
           </NextLink>
-          <NextLink href="/" passHref>
+          <NextLink href="/transport/driver" passHref>
             <Button
               as="a"
               bg={"white"}
