@@ -41,10 +41,8 @@ export default function Driver() {
   const [driverTypeInput, setDriverTypeInput] = useState("");
 
   const [showModal, setShowModal] = useState(false);
-  const [licenseNumber, setLicenseNumber] = useState("");
-  const [licenseType, setLicenseType] = useState("");
-  const [driverType, setDriverType] = useState("");
-  const [productionYear, setProductionYear] = useState("");
+  const [driverName, setDriverName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const fetchDriverData = () => {
     const data = [
@@ -157,22 +155,13 @@ export default function Driver() {
             <ModalCloseButton />
             <ModalBody pb={6}>
               <FormControl>
-                <FormLabel>License Number</FormLabel>
-                <Input onChange={(e) => setLicenseNumber(e.target.value)} />
+                <FormLabel>Driver Name</FormLabel>
+                <Input onChange={(e) => setDriverName(e.target.value)} />
               </FormControl>
 
               <FormControl mt={4}>
-                <FormLabel>License Type</FormLabel>
-                <Input onChange={(e) => setLicenseType(e.target.value)} />
-              </FormControl>
-
-              <FormControl mt={4}>
-                <FormLabel>Driver Type</FormLabel>
-                <Input onChange={(e) => setDriverType(e.target.value)} />
-              </FormControl>
-              <FormControl mt={4}>
-                <FormLabel>Production Year</FormLabel>
-                <Input onChange={(e) => setProductionYear(e.target.value)} />
+                <FormLabel>Phne Number</FormLabel>
+                <Input onChange={(e) => setPhoneNumber(e.target.value)} />
               </FormControl>
             </ModalBody>
 
