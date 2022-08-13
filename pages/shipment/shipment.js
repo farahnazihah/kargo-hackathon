@@ -193,7 +193,6 @@ export default function Truck() {
     } else {
       let searchValue = dataShipment.filter(d => d.shipment_number == search);
       setDataShipmentFiltered(searchValue);
-      console.log(searchValue)
     }
   }
 
@@ -207,7 +206,6 @@ export default function Truck() {
         loading_date : dateFormat(loadingDate, "yyyy-mm-dd"),
         status : 'Created',
       }
-      console.log(item)
       
       // axios.post('url',item)
       // .then(response => {        
@@ -228,7 +226,6 @@ export default function Truck() {
         id_driver : driverIDChoosed,
         status : 'Allocated',
       }
-      console.log(item)
       
       // axios.put('url',item)
       // .then(response => {        
